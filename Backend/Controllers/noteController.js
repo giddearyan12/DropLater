@@ -2,13 +2,12 @@ import { notesModel } from "../Models/notesModel.js";
 
 const createNote =async(req, res)=>{
     try {
-        console.log('hello')
-        const {title, body, releaseAt, webHookUrl} =req.body;
-        if(!title || !body || !releaseAt || !webHookUrl){
-            res.status(400).json({success:false, message:"Give valid input"});
+        const {name, body, releaseAt, webHookUrl} =req.body.formData;
+        if(!name || !body || !releaseAt || !webHookUrl){
+           return res.status(400).json({success:false, message:"Give valid input"});
         }
         const newNote = new notesModel({
-            title,
+            title:name,
             body,
             releaseAt,
             webHookUrl,
@@ -30,5 +29,26 @@ const listNote =async(req, res)=>{
         res.status(500).json({success:false, error});
     }
 }
+const replayNote = async(req, res)=>{
+    try {
+        const {id} = req.params;
+        // const {releaseAt} = req.body;
+        if(!id){
+           return res.status(400).json({success:false, message:"Id required"});
+        }
+        const note = await notesModel.findById(id);
+        if(note.status !== 'failed' && note.status !== 'dead'){
+            return res.status(400).json({success:false, message:"Status should be either failed or dead"});
+        }
+        note.status = 'pending';
+        // note.releaseAt = releaseAt;
+        await note.save();
 
-export {createNote, listNote}
+        res.status(200).json({success:true, note});
+
+    } catch (error) {
+       res.status(500).json({success:false, error}); 
+    }
+}
+
+export {createNote, listNote, replayNote}
