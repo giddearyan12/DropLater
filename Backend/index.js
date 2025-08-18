@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import noteRouter from './Routes/noteRouter.js';
 import { rateLimit } from 'express-rate-limit'
 import { checkAuthorization } from './authMiddleware.js';
+import { producer } from './producer.js';
+import './worker.js'
 
 const app = express()
 const port = 8000
@@ -32,6 +34,11 @@ app.use('/api',checkAuthorization, noteRouter)
 app.get('/health',async(req, res)=>{
     res.json({ok:true})
 })
+
+setInterval(() => {
+  producer();
+}, 5000);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
