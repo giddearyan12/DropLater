@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: backend
+    command: node index.js
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/droplater
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "8000:8000"   
+
+  webhook:
+    build: .
+    container_name: webhook
+    command: node server.js
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    depends_on:
+      - backend
+    environment:
+      - BACKEND_URL=http://backend:3000
+    ports:
+      - "3000:3000"   
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    volumes:
+      - mongo-data:/data/droplater
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo-data:
