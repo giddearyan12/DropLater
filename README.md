@@ -86,8 +86,8 @@
   
   <div class="screenshot">
     <p><i>Planning for Project</i></p>
-    ![App Screenshot](./one.jpg)
-    ![App Screenshot](./two.jpg)
+     <img src="./one.jpg" alt="App Screenshot" width="400"/> <br/>
+  <img src="./two.jpg" alt="App Screenshot" width="400"/>
   </div>
   
 
