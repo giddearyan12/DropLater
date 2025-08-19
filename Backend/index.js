@@ -6,7 +6,6 @@ import { rateLimit } from 'express-rate-limit'
 import { checkAuthorization } from './authMiddleware.js';
 import { producer } from './producer.js';
 import './worker.js'
-
 const app = express()
 const port = 8000
 app.use(cors({

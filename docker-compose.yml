@@ -1,0 +1,29 @@
+name: drop-later
+services:
+  api:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+
+  sink:
+    build:
+      context: ./Sink
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+ 
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
