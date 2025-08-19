@@ -42,11 +42,11 @@ export const worker = new Worker('note', async (job) => {
 }, { connection: redis });
 
 worker.on("completed", (job) => {
-    console.log(`✅ Job ${job.id} completed`);
+    console.log(`Job completed`);
 });
 
 worker.on("failed", (job, err) => {
-    console.error(`❌ Job ${job?.id} failed:`, err);
+    console.error(`Job failed:`, err);
 });
 
 

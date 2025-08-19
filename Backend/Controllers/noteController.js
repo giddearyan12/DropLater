@@ -25,7 +25,8 @@ const listNote = async (req, res) => {
     try {
         const { status, page } = req.query;
         const skip = (page - 1) * 20;
-        const notes = await notesModel.find({ status }).skip(skip).limit(20);
+        const query = status ? { status } : {};
+        const notes = await notesModel.find(query).skip(skip).limit(20);
         res.status(200).json({ success: true, notes });
     } catch (error) {
         res.status(500).json({ success: false, error });
@@ -34,7 +35,6 @@ const listNote = async (req, res) => {
 const replayNote = async (req, res) => {
     try {
         const { id } = req.params;
-        // const {releaseAt} = req.body;
         if (!id) {
             return res.status(400).json({ success: false, message: "Id required" });
         }
@@ -43,7 +43,6 @@ const replayNote = async (req, res) => {
             return res.status(400).json({ success: false, message: "Status should be either failed or dead" });
         }
         note.status = 'pending';
-        // note.releaseAt = releaseAt;
         await note.save();
 
         res.status(200).json({ success: true, note });
