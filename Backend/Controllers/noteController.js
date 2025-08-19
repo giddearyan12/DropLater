@@ -1,5 +1,5 @@
 import { notesModel } from "../Models/notesModel.js";
-import queue from "../../Queue.js";
+import queue from "../Queue.js";
 
 const createNote = async (req, res) => {
     try {

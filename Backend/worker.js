@@ -2,7 +2,7 @@ import { createHash } from 'crypto';
 import axios from 'axios';
 import redis from './redis.js';
 import { Worker } from 'bullmq';
-import { notesModel } from './api/Models/notesModel.js';
+import { notesModel } from './Models/notesModel.js';
 
 export const worker = new Worker('note', async (job) => {
 

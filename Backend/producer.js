@@ -1,4 +1,4 @@
-import { notesModel } from "./api/Models/notesModel.js";
+import { notesModel } from "./Models/notesModel.js";
 import noteQueue from "./Queue.js";
 
 
