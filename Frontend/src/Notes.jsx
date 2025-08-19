@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-const Notes = () => {
-
-   
-    const [notes, setNotes] = useState([])
+const Notes = ({notes, getNotes}) => {
 
     const handle = async(note) => {
         try {
@@ -14,50 +10,17 @@ const Notes = () => {
                 },
             })
             if (response.data.success) {
-                alert("Done")
                 getNotes();
-
+                alert("Done")
             }
             else {
                 alert(response.data.message)
             }
-
-
         } catch (error) {
             console.log(error)
         }
         
     }
-    const getNotes = async () => {
-        try {
-            const response = await axios.get('http://localhost:8000/api/notes', {
-                headers: {
-                    Authorization: 'Bearer itsmytoken'
-                },
-                params: {
-                    // status: 'pending',
-                    page: 1,
-
-                }
-            })
-            if (response.data.success) {
-                setNotes(response.data.notes);
-            }
-            else {
-                alert(response.data.message)
-            }
-
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        getNotes();
-    }, [])
-
-
 
     return (
         <div className='w-full'>
@@ -83,7 +46,7 @@ const Notes = () => {
                                     timeStyle: "short",
                                 })}</td>
                             <td className="px-4 py-2 border">{note.status}</td>
-                            <td className="px-4 py-2 border">{new Date(note.deliveredAt)
+                            <td className="px-4 py-2 border">{note.deliveredAt !== null && new Date(note.deliveredAt)
                                 .toLocaleString("en-IN", {
                                     dateStyle: "medium",
                                     timeStyle: "short",

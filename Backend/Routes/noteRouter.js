@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNote, listNote, replayNote } from '../api/Controllers/noteController.js';
+import { createNote, listNote, replayNote } from '../Controllers/noteController.js';
 
 const noteRouter = express.Router();
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Navbar from './Navbar'
 import Notes from './Notes'
 import axios from 'axios'
+import { useEffect } from 'react'
 
 const App = () => {
   const [showModal, setShowModal] = useState(false)
@@ -12,32 +13,68 @@ const App = () => {
     releaseAt: '',
   })
 
+  const [notes, setNotes] = useState([])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
-  const handleSubmit = async(e) => {
+
+
+  const getNotes = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/notes', {
+        headers: {
+          Authorization: 'Bearer itsmytoken'
+        },
+        params: {
+          // status: 'pending',
+          page: 1,
+
+        }
+      })
+      if (response.data.success) {
+        setNotes(response.data.notes);
+      }
+      else {
+        alert(response.data.message)
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const response = await axios.post('http://localhost:8000/api/notes',{formData},{
-        headers:{
+      const response = await axios.post('http://localhost:8000/api/notes',  formData , {
+        headers: {
           Authorization: 'Bearer itsmytoken'
         }
       })
-      if(response.data.success){
+      getNotes();
+      if (response.data.success) {
         alert("Done")
       }
-      else{
+      else {
         alert(response.data.message)
       }
-      
-      
+
+
     } catch (error) {
       console.log(error)
     }
     setShowModal(false);
   }
+
+  useEffect(() => {
+     getNotes();
+  }, [])
   
+
+ 
+
   return (
     <div>
       <Navbar />
@@ -46,7 +83,7 @@ const App = () => {
         <button onClick={() => setShowModal(true)} className='bg-blue-300 py-3 px-5 border-none rounded-xl'>Create Note</button>
       </div>
       <div className='w-full px-5'>
-        <Notes />
+        <Notes notes={notes} getNotes={getNotes} />
       </div>
       {
         showModal && <div className='w-full h-screen fixed bg-black/60 top-0 left-0 z-10 flex items-center justify-center'>

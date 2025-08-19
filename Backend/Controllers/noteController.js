@@ -1,9 +1,10 @@
 import { notesModel } from "../Models/notesModel.js";
-import queue from "../Queue.js";
+import noteQueue from "../Queue.js";
 
 const createNote = async (req, res) => {
     try {
-        const { name, body, releaseAt, webHookUrl } = req.body.formData;
+        const { name, body, releaseAt, webHookUrl } = req.body;
+        console.log(name)
         if (!name || !body || !releaseAt || !webHookUrl) {
             return res.status(400).json({ success: false, message: "Give valid input" });
         }
@@ -13,8 +14,14 @@ const createNote = async (req, res) => {
             releaseAt,
             webHookUrl,
         })
+          if (new Date(releaseAt) < new Date()) {
+            await noteQueue.add(
+                'sendNote',
+                { id: newNote._id.toString(), url: newNote.webHookUrl, releaseAt: newNote.releaseAt },
+                { attempts: 3 }
+            );
+        } 
         
-
         await newNote.save();
         res.status(200).json({ success: true, id: newNote._id });
     } catch (error) {
